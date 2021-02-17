@@ -1,0 +1,1070 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Exiled Lands PVP",
+      "type": "row"
+    },
+    {
+      "datasource": "SQLite-Exiled-event-log",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(79, 79, 79)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Player"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 164
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rank"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 78
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kills"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 72
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Deaths"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kill Death Ratio"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 108
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 5,
+        "x": 0,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "frameIndex": 4,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kills"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "SELECT RANK() OVER (ORDER BY Kills DESC) Rank, killcount.Player, Kills, ifnull(deaths, '0') as Deaths FROM (select causername as Player, count(*) as Kills FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 <= datetime('now') group by x,y,z) group by causername) as KillCount left join (select ownerName as Player, count(*) as Deaths FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 <= datetime('now') group by x,y,z) group by ownerName) using (Player)  ORDER BY Kills DESC",
+          "refId": "B",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exiled Lands Overall Leader Board",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Kill Death Ratio",
+            "binary": {
+              "left": "Kills",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Deaths"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "SQLite-Exiled-event-log",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(79, 79, 79)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Player"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 164
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rank"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 73
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kills"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 82
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Deaths"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 76
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kill Death Ratio"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 109
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 5,
+        "x": 5,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kills"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "SELECT RANK() OVER (ORDER BY Kills DESC) Rank, killcount.Player, Kills, ifnull(deaths, '0') as Deaths FROM (select causername as Player, count(*) as Kills FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-7 Day') group by x,y,z) group by causername) as KillCount left join (select ownerName as Player, count(*) as Deaths FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-7 Day') group by x,y,z) group by ownerName) using (Player)  ORDER BY Kills DESC",
+          "refId": "B",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exiled Lands Weekly Leader Board",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Kill Death Ratio",
+            "binary": {
+              "left": "Kills",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Deaths"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "SQLite-Exiled-event-log",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(79, 79, 79)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Player"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 141
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rank"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 54
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kills"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 77
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Deaths"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 99
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kill Death Ratio"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 134
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 5,
+        "x": 10,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kills"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "SELECT RANK() OVER (ORDER BY Kills DESC) Rank, killcount.Player, Kills, ifnull(deaths, '0') as Deaths FROM (select causername as Player, count(*) as Kills FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-1 Day') group by x,y,z) group by causername) as KillCount left join (select ownerName as Player, count(*) as Deaths FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-1 Day') group by x,y,z) group by ownerName) using (Player)  ORDER BY Kills DESC",
+          "refId": "B",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exiled Lands Daily Leader Board",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Kill Death Ratio",
+            "binary": {
+              "left": "Kills",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Deaths"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "SQLite-Exiled-event-log",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgba(0, 0, 0, 0)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "color-background",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(31, 31, 31)",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 8,
+        "x": 15,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time_Of_Kill_UTC_0"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "select worldTime, ukill.causerName, causerGuildName, ukill.ownerName, ownerGuildName FROM (select distinct x, y, z, causerName, causerGuildName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT worldTime, x, y, z, causerName , ownerName, ownerGuildName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where datetime(worldTime,'unixepoch') >= datetime('now', '-1 Day') group by x ,y ,z order by worldTime DESC",
+          "refId": "B",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exiled Lands Recent Kills",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "causerGuildName": "Attacker's Guild",
+              "causerName": "Attacker",
+              "ownerGuildName": "Victim's Guild",
+              "ownerName": "Victim"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Siptah PVP",
+      "type": "row"
+    },
+    {
+      "datasource": "SQLite-Siptah-Event-Log",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(79, 79, 79)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Player"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 164
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rank"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 73
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kills"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 81
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Deaths"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 81
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kill Death Ratio"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 102
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 5,
+        "x": 0,
+        "y": 26
+      },
+      "id": 6,
+      "options": {
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kills"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "SELECT RANK() OVER (ORDER BY Kills DESC) Rank, killcount.Player, Kills, ifnull(deaths, '0') as Deaths FROM (select causername as Player, count(*) as Kills FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 <= datetime('now') group by x,y,z) group by causername) as KillCount left join (select ownerName as Player, count(*) as Deaths FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 <= datetime('now') group by x,y,z) group by ownerName) using (Player)  ORDER BY Kills DESC",
+          "refId": "B",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Siptah Overall Leader Board",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Kill Death Ratio",
+            "binary": {
+              "left": "Kills",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Deaths"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "SQLite-Siptah-Event-Log",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(79, 79, 79)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Player"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 162
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rank"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 69
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kill Death Ratio"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kills"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 87
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Deaths"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 79
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 5,
+        "x": 5,
+        "y": 26
+      },
+      "id": 7,
+      "options": {
+        "frameIndex": 3,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kills"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "SELECT RANK() OVER (ORDER BY Kills DESC) Rank, killcount.Player, Kills, ifnull(deaths, '0') as Deaths FROM (select causername as Player, count(*) as Kills FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-7 Day') group by x,y,z) group by causername) as KillCount left join (select ownerName as Player, count(*) as Deaths FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-7 Day') group by x,y,z) group by ownerName) using (Player)  ORDER BY Kills DESC",
+          "refId": "D",
+          "timeColumns": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Siptah Weekly Leader Board",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Kill Death Ratio",
+            "binary": {
+              "left": "Kills",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Deaths"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "SQLite-Siptah-Event-Log",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(79, 79, 79)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Player"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 144
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rank"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 51
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kills"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 77
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Deaths"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 99
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kill Death Ratio"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 127
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 5,
+        "x": 10,
+        "y": 26
+      },
+      "id": 10,
+      "options": {
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kills"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "SELECT RANK() OVER (ORDER BY Kills DESC) Rank, killcount.Player, Kills, ifnull(deaths, '0') as Deaths FROM (select causername as Player, count(*) as Kills FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-1 Day') group by x,y,z) group by causername) as KillCount left join (select ownerName as Player, count(*) as Deaths FROM (select Time_Of_Kill_UTC_0, ukill.causerName, ukill.ownerName FROM (select distinct x, y, z, causerName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT datetime(worldTime, 'unixepoch') as Time_Of_Kill_UTC_0, x, y, z, causerName , ownerName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where Time_Of_Kill_UTC_0 >= datetime('now', '-1 Day') group by x,y,z) group by ownerName) using (Player)  ORDER BY Kills DESC",
+          "refId": "B",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exiled Lands Daily Leader Board",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Kill Death Ratio",
+            "binary": {
+              "left": "Kills",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Deaths"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "SQLite-Siptah-Event-Log",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgba(0, 0, 0, 0)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "color-background",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(31, 31, 31)",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 8,
+        "x": 15,
+        "y": 26
+      },
+      "id": 8,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Kill Death Ratio"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "queryText": "\n    SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value\n    WHERE time >= 1234 and time < 134567\n  ",
+          "queryType": "table",
+          "rawQueryText": "select worldTime, ukill.causerName, causerGuildName, ukill.ownerName, ownerGuildName FROM (select distinct x, y, z, causerName, causerGuildName, ownerName from game_events where eventType = 103 AND causerName != '' AND ownerName != '') as ukill  join (SELECT worldTime, x, y, z, causerName , ownerName, ownerGuildName FROM game_events WHERE eventType = 103 AND causerName != '' AND ownerName != '') using (x, y, z) where datetime(worldTime,'unixepoch') >= datetime('now', '-1 Day') group by x ,y ,z order by worldTime DESC",
+          "refId": "A",
+          "timeColumns": [
+            "worldTime"
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Siptah Recent Kills",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "causerGuildName": "Attacker's Guild",
+              "causerName": "Attacker",
+              "ownerGuildName": "Victim's Guild",
+              "ownerName": "Victim"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "PVP Dashboard",
+  "uid": "UHT-F-LGz",
+  "version": 64
+}
